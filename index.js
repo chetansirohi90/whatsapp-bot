@@ -10,6 +10,8 @@ app.use(express.json());
 // 🔑 SAME token Meta dashboard me dalna hai
 const VERIFY_TOKEN = "test123";
 
+
+
 // git commit -m "Initial WhatsApp bot setup"===============================
 // ✅ WEBHOOK VERIFY (GET)
 // ===============================
@@ -72,7 +74,7 @@ app.post("/webhook", async (req, res) => {
 });
 
 // ===============================
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 1000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
