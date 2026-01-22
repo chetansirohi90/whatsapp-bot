@@ -1,3 +1,6 @@
+require('dotenv').config();
+const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
+const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
 const express = require("express");
 const axios = require("axios");
 
@@ -45,7 +48,7 @@ app.post("/webhook", async (req, res) => {
 
     // 🔁 Auto reply
     await axios.post(
-      `https://graph.facebook.com/v18.0/${process.env.1006019942587201}/messages`,
+      `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
       {
         messaging_product: "whatsapp",
         to: from,
@@ -55,7 +58,7 @@ app.post("/webhook", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.EAAKZCt34b5QsBQnHbok5bAqDfhvocDUymoIyIoyhziCFLHZAbPLSr8qwjlzINLmfGZCfyG7tZAHJOQcAz20cdFwXf0wIcKZCS6Pbv2xe6d2BqMCfJboWq0EwcxfCvFhdi7pSi81YmegjtF37lLuM9cwiGOobbFZAHwNqTamyy0ikb4yNKwJR201udUDyoRWFVlaZAjSYXo59HSJYlKmCdbtTWZBw828Q0SZAy9ZAzlxFjZBTZCIflYUf15YuTGE0VKfZAMKHgqBWLKMrVGeAQxZCZBZCaBPy}`,
+          Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
           "Content-Type": "application/json"
         }
       }
