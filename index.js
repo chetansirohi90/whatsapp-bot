@@ -1,25 +1,75 @@
 const express = require("express");
+const axios = require("axios");
+
 const app = express();
-
-const PORT = process.env.PORT || 1000;
-
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("✅ Server is alive");
-});
+// 🔑 SAME token Meta dashboard me dalna hai
+const VERIFY_TOKEN = "test123";
 
+// ===============================
+// ✅ WEBHOOK VERIFY (GET)
+// ===============================
 app.get("/webhook", (req, res) => {
-  console.log("🔍 GET /webhook hit");
-  res.send("Webhook GET working");
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+    console.log("✅ Webhook verified successfully");
+    res.status(200).send(challenge);
+  } else {
+    console.log("❌ Webhook verification failed");
+    res.sendStatus(403);
+  }
 });
 
-app.post("/webhook", (req, res) => {
-  console.log("📩 POST /webhook hit");
-  console.log(req.body);
-  res.sendStatus(200);
+// ===============================
+// ✅ RECEIVE MESSAGE (POST)
+// ===============================
+app.post("/webhook", async (req, res) => {
+  try {
+    const entry = req.body.entry?.[0];
+    const changes = entry?.changes?.[0];
+    const message = changes?.value?.messages?.[0];
+
+    if (!message) {
+      return res.sendStatus(200);
+    }
+
+    const from = message.from;
+    const text = message.text?.body || "";
+
+    console.log("📩 Message from:", from);
+    console.log("💬 Text:", text);
+
+    // 🔁 Auto reply
+    await axios.post(
+      `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to: from,
+        text: {
+          body: `👨‍⚕️ *Dr. Sharma Clinic*\n\nNamaste 🙏\n\nClinic Timings:\n🕘 9 AM – 1 PM\n🕕 6 PM – 9 PM\n\n📍 Location: Sector 62, Noida\n📞 Appointments ke liye reply karein "APPOINTMENT"\n\n— Auto Assistant`
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("❌ Error:", err.message);
+    res.sendStatus(500);
+  }
 });
 
+// ===============================
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
