@@ -7,7 +7,7 @@ app.use(express.json());
 // 🔑 SAME token Meta dashboard me dalna hai
 const VERIFY_TOKEN = "test123";
 
-// ===============================
+// git commit -m "Initial WhatsApp bot setup"===============================
 // ✅ WEBHOOK VERIFY (GET)
 // ===============================
 app.get("/webhook", (req, res) => {
@@ -45,7 +45,7 @@ app.post("/webhook", async (req, res) => {
 
     // 🔁 Auto reply
     await axios.post(
-      `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
+      `https://graph.facebook.com/v18.0/${process.env.1006019942587201}/messages`,
       {
         messaging_product: "whatsapp",
         to: from,
@@ -55,7 +55,7 @@ app.post("/webhook", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+          Authorization: `Bearer ${process.env.EAAKZCt34b5QsBQnHbok5bAqDfhvocDUymoIyIoyhziCFLHZAbPLSr8qwjlzINLmfGZCfyG7tZAHJOQcAz20cdFwXf0wIcKZCS6Pbv2xe6d2BqMCfJboWq0EwcxfCvFhdi7pSi81YmegjtF37lLuM9cwiGOobbFZAHwNqTamyy0ikb4yNKwJR201udUDyoRWFVlaZAjSYXo59HSJYlKmCdbtTWZBw828Q0SZAy9ZAzlxFjZBTZCIflYUf15YuTGE0VKfZAMKHgqBWLKMrVGeAQxZCZBZCaBPy}`,
           "Content-Type": "application/json"
         }
       }
